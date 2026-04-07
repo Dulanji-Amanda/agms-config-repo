@@ -1,0 +1,42 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:5173"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+      
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: zone-service
+          uri: lb://ZONE-SERVICE
+          predicates:
+            - Path=/api/zones/**
+            
+        - id: sensor-service
+          uri: lb://SENSOR-SERVICE
+          predicates:
+            - Path=/api/sensors/**
+            
+        - id: automation-service
+          uri: lb://AUTOMATION-SERVICE
+          predicates:
+            - Path=/api/automation/**
+            
+        - id: crop-inventory-service
+          uri: lb://CROP-INVENTORY-SERVICE
+          predicates:
+            - Path=/api/crops/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
